@@ -1,11 +1,11 @@
+import React from "react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { useState } from "react";
 import { auth, database } from "../misc/firebase";
 
 
 const ProfileContext = createContext();
 
-export const profileProvider = ({childern}) => {
+export const ProfileProvider = ({childern}) => {
 
     let userRef;
 

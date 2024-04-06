@@ -1,11 +1,18 @@
-import React from 'react'
-import {Button, Icon, Drawer} from 'rsuite';
+import React, { useCallback } from 'react'
+import {Button, Icon, Drawer, Alert} from 'rsuite';
 import { useMediaQuery, useModalState } from '../../misc/custom-hooks';
+import Dashboard from '.';
+import { auth } from '../../misc/firebase';
 
 const DashboardToggle = () => {
   
   const {isOpen, close, open} = useModalState();
   const isMobile= useMediaQuery('(max-width: 992px)');
+  const onSiteOut = useCallback(()=>{
+    auth.signOut();
+    Alert.info('Signed Out',4000); 
+    close();
+  },[close])
   
   return (
     <>

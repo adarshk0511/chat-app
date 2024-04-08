@@ -1,5 +1,5 @@
-import {Divider, useRef} from 'rsuite';
-import React, { useEffect, useState } from 'react'
+import {Divider} from 'rsuite';
+import React, { useEffect, useState, useRef } from 'react'
 import DashboardToggle from './dashboard/DashboardToggle'
 import CreateRoomBtnModal from './dashboard/CreateRoomBtnModal'
 import ChatRoomList from './rooms/ChatRoomList';
@@ -26,4 +26,4 @@ const Sidebar = () => {
   )
 }
 
-export default Sidebar
+export default Sidebar;

@@ -1,11 +1,14 @@
-import React from 'react'
-import ChatTop from '../../components/chat-window/top';
-import Messages from '../../components/chat-window/messages';
-import ChatBottom from '../../components/chat-window/bottom';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
+import { Loader } from 'rsuite';
+
+import ChatTop from '../../components/chat-window/top';
+import ChatBottom from '../../components/chat-window/bottom';
+import Messages from '../../components/chat-window/messages';
 import { useRooms } from '../../context/rooms.context';
-import {Loader} from 'rsuite';
-import {ChatRoomProvider} from '../../context/current-room.context'
+import { CurrentRoomProvider } from '../../context/current-room.context';
+import { transformToArr } from '../../misc/helpers';
+import { auth } from '../../misc/firebase';
 
 const Chat = () => {
   
@@ -26,11 +29,11 @@ const Chat = () => {
   const {name, description} = currentRoom;
 
   const currentRoomData = {
-    name, description;
-  }
+    name, description
+  };
 
     return (
-    <ChatRoomProvider data={currentRoomData}>
+    <CurrentRoomProvider data={currentRoomData}>
         <div className='chat-top'>
             <ChatTop/>
         </div>
@@ -42,8 +45,8 @@ const Chat = () => {
         <div className='chat-bottom'>
             <ChatBottom/>
         </div>
-    </ChatRoomProvider>
+    </CurrentRoomProvider>
   )
 }
 
-export default Chat
+export default Chat;

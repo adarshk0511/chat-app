@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { database } from '../../../misc/firebase';
 import { transformToArrayWithId } from '../../../misc/helpers';
 import ProfileAvatar from '../../ProfileAvatar';
+import ProfileInfoBtnModal from './ProfileInfoBtnModal';
 
 const MessageItems = ({message}) => {
    
@@ -14,6 +15,7 @@ const MessageItems = ({message}) => {
             <div className='d-flex align-items-center font-bolder mb-1'>
                 <ProfileAvatar src={author.avatar} name={author.name} className="ml-1" size="xs"/>
                 <span className='ml-2'>{author.name}</span>
+                <ProfileInfoBtnModal profile={author} apperance="link" className="p-0 ml-1 text-black" />
                 <TimeAgo 
                     datetime={
                         createdAt

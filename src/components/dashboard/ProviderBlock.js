@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
-import { auth } from '../../misc/firebase';
-import {Tag, Icon, Button, Alert} from 'rsuite';
-import firebase from 'firebase/app';
 
+import React, { useState } from 'react';
+import { Tag, Icon, Button, Alert } from 'rsuite';
+import {
+  FacebookAuthProvider,
+  GoogleAuthProvider,
+  linkWithPopup,
+  unlink,
+} from 'firebase/auth';
+import { auth } from '../../misc/firebase';
 
 const ProviderBlock = () => {
   const [isConnected, setIsConnected] = useState({
@@ -15,85 +20,80 @@ const ProviderBlock = () => {
   });
 
   const updateIsConnected = (providerId, value) => {
-    setIsConnected(p=>{
-        return {
-            ...p,
-            [providerId]: value
-        }
-    })
-  }
+    setIsConnected(p => {
+      return {
+        ...p,
+        [providerId]: value,
+      };
+    });
+  };
 
-  const unlink = async (providerId) =>{
-        try {
-            if(auth.currentUser.providerData.length === 1){
-                throw new Error(`You cannot disconnect from ${providerId}`)
-            }
+  const unlinkProvider = async providerId => {
+    try {
+      if (auth.currentUser.providerData.length === 1) {
+        throw new Error(`You can not disconnect from ${providerId}`);
+      }
 
-            await auth.currentUser.unlink(providerId);
-
-            updateIsConnected(providerId, false);
-
-            Alert.info(`Disconnected from ${providerId}`,4000);
-        } catch (err) {
-            Alert.error(err.message,4000)
-        }
-  }
+      await unlink(auth.currentUser, providerId);
+      updateIsConnected(providerId, false);
+      Alert.info(`Disconnected from ${providerId}`, 4000);
+    } catch (err) {
+      Alert.error(err.message, 4000);
+    }
+  };
 
   const unlinkFacebook = () => {
-    unlink('facebook.com')
-  }
+    unlinkProvider('facebook.com');
+  };
   const unlinkGoogle = () => {
-    unlink('google.com')
-  }
-  
+    unlinkProvider('google.com');
+  };
 
-  const link = async (provider) =>{
-        try {
-           await auth.currentUser.linkWithPopup(provider);
-           Alert.info(`Linked to ${provider.providerId}`,4000);
-           updateIsConnected(provider.providerId, true);
-        } catch (err) {
-            Alert.error(err.message, 4000);
-        }
-  }
-
+  const linkProvider = async provider => {
+    try {
+      await linkWithPopup(auth.currentUser, provider);
+      Alert.info(`Linked to ${provider.providerId}`, 4000);
+      updateIsConnected(provider.providerId, true);
+    } catch (err) {
+      Alert.error(err.message, 400);
+    }
+  };
 
   const linkFacebook = () => {
-    link(new firebase.auth.FacebookAuthProvider())
-  }
+    linkProvider(new FacebookAuthProvider());
+  };
   const linkGoogle = () => {
-    link(new firebase.auth.GoogleAuthProvider())
-  }
+    linkProvider(new GoogleAuthProvider());
+  };
 
-  return <div>
-
-    {isConnected["google.com"] && 
+  return (
+    <div>
+      {isConnected['google.com'] && (
         <Tag color="green" closable onClose={unlinkGoogle}>
-        <Icon icon="google"/>
+          <Icon icon="google" /> Connected
         </Tag>
-    }
-    { isConnected["facebook.com"] &&
+      )}
+      {isConnected['facebook.com'] && (
         <Tag color="blue" closable onClose={unlinkFacebook}>
-        <Icon icon="facebook"/>
-            </Tag>
-    }
+          <Icon icon="facebook" /> Connected
+        </Tag>
+      )}
 
-    <div className='mt-2'>
-        {!isConnected["google.com"] && 
-            <Button block color="green" onClick={linkGoogle}>
-            <Icon icon="google"/> Link to Google
-            </Button>
-        }
-        
-        {!isConnected["facebook.com"] &&
-            <Button block color="blue" onClick={linkFacebook}>
-            <Icon icon="facebook"/> Link to Facebook
-            </Button>
-        }
-        
+      <div className="mt-2">
+        {!isConnected['google.com'] && (
+          <Button block color="green" onClick={linkGoogle}>
+            <Icon icon="google" /> Link to Google
+          </Button>
+        )}
+
+        {!isConnected['facebook.com'] && (
+          <Button block color="blue" onClick={linkFacebook}>
+            <Icon icon="facebook" /> Link to Facebook
+          </Button>
+        )}
+      </div>
     </div>
-
-  </div>;
+  );
 };
 
 export default ProviderBlock;

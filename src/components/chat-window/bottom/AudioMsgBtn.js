@@ -34,9 +34,9 @@ const AudioMsgBtn = ({ afterUpload }) => {
 
         setIsUploading(false);
         afterUpload([file]);
-      } catch (error) {
+      } catch (err) {
         setIsUploading(false);
-        Alert.error(error.message);
+        Alert.error(err.message);
       }
     },
     [afterUpload, chatId]
